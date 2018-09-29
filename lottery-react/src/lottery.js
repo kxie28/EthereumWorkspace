@@ -1,6 +1,6 @@
 import web3 from "./web3";
 
-const address = "0x4fCC8F12DeBC88f1B03230fB20725954DcE69F70";
+const address = "0x6827372AbcDe47fdD864251a74505233Ff6B105c";
 
 const abi = [
   {
@@ -55,6 +55,9 @@ const abi = [
     type: "constructor"
   }
 ];
+
+//const lottery = new web3.eth.Contract(abi, address);
+//export default lottery;
 
 // create the instance of the contract (we can use every method that was in the
 // lottery.sol contract)

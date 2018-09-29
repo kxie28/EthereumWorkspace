@@ -1,20 +1,56 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import web3 from "./web3";
 import lottery from "./lottery";
 
 class App extends Component {
-  constructor(props) {
-    super(props);
+  state = {
+    manager: "",
+    players: [],
+    balance: "",
+    value: "",
+    message: ""
+  };
 
-    this.state = { manager: "" };
-  }
   async componentDidMount() {
     const manager = await lottery.methods.manager().call();
+    const players = await lottery.methods.getPlayers().call();
+    const balance = await web3.eth.getBalance(lottery.options.address);
 
-    this.setState({ manager });
+    this.setState({ manager, players, balance });
   }
+
+  onSubmit = async event => {
+    // Don't want form to submit itself so use preventDefault
+    event.preventDefault();
+
+    const accounts = await web3.eth.getAccounts();
+
+    // Since it takes 15-30 seconds for transactions to finish on the network,
+    // we put a message to tell the user that the transaction is completing
+    this.setState({ message: "Waiting on transaction success..." });
+
+    await lottery.methods.enter().send({
+      from: accounts[0],
+      value: web3.utils.toWei(this.state.value, "ether")
+    });
+
+    // After the transaction is approved, we'll send a new message.
+    // Because of the await in the above method, this message will only happen
+    // after the transaction is finished.
+    this.setState({ message: "You have been entered!" });
+  };
+
+  onClick = async () => {
+    const accounts = await web3.eth.getAccounts();
+
+    this.setState({ message: "Waiting on transaction success..." });
+
+    await lottery.methods.pickWinner().send({
+      from: accounts[0]
+    });
+    this.setState({ message: "A winner has been picked!" });
+  };
 
   render() {
     // prints out web3 version in browser console
@@ -23,7 +59,32 @@ class App extends Component {
     return (
       <div>
         <h2>Lottery Contract</h2>
-        <p>This contract is managed by {this.state.manager}</p>
+        <p>
+          This contract is managed by {this.state.manager}. There are currently{" "}
+          {this.state.players.length} people entered, competing to win{" "}
+          {web3.utils.fromWei(this.state.balance, "ether")} ether!
+        </p>
+
+        <hr />
+        <form onSubmit={this.onSubmit}>
+          <h4>Want to try your luck?</h4>
+          <div>
+            <label>Amount of ether to enter </label>
+            <input
+              value={this.state.value}
+              onChange={event => this.setState({ value: event.target.value })}
+            />
+          </div>
+          <button>Enter</button>
+        </form>
+        <hr />
+
+        <h4>Ready to pick a winner?</h4>
+        <button onClick={this.onClick}>Pick a winner!</button>
+
+        <hr />
+
+        <h1>{this.state.message}</h1>
       </div>
     );
   }

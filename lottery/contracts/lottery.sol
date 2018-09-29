@@ -23,6 +23,7 @@ contract Lottery {
     function pickWinner() public restricted {
         uint index = random() % players.length;
         players[index].transfer(this.balance);
+        lastWinner = players[index];
 
         //recreate a players array with size 0 to reset the lottery contract
         players = new address[](0);
