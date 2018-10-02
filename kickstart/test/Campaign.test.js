@@ -108,17 +108,25 @@ describe("Campaigns", () => {
       gas: 1000000
     });
 
+    // created as let b/c we'll be reassigning balances. Get the balance on
+    // accounts[1] before we send ether to it.
+    let balance = await web3.eth.getBalance(accounts[1]);
+    balance = web3.utils.fromWei(balance, "ether");
+    // built in helper and takes a string and tries to turn it into a float
+    balance = parseFloat(balance);
+    console.log(balance);
+
     await campaign.methods.finalizeRequest(0).send({
       from: accounts[0],
       gas: 1000000
     });
 
     // created as let b/c we'll be reassigning balances
-    let balance = await web3.eth.getBalance(accounts[1]);
-    balance = web3.utils.fromWei(balance, "ether");
+    let finalBalance = await web3.eth.getBalance(accounts[1]);
+    finalBalance = web3.utils.fromWei(finalBalance, "ether");
     // built in helper and takes a string and tries to turn it into a float
-    balance = parseFloat(balance);
-    console.log(balance);
-    assert(balance > 104);
+    finalBalance = parseFloat(finalBalance);
+    console.log(finalBalance);
+    assert(finalBalance > balance);
   });
 });
