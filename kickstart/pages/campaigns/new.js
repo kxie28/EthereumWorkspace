@@ -14,7 +14,9 @@ class CampaignNew extends Component {
   // everytime the user types into the input.
   state = {
     minimumContribution: "",
-    errorMessage: ""
+    errorMessage: "",
+    // Flag to check if action is loading
+    loading: false
   };
 
   // Event handler. Whenever we have a form submittal, the browser will automatically
@@ -22,6 +24,8 @@ class CampaignNew extends Component {
   // keeps the browser from attempting to submit the form.
   onSubmit = async event => {
     event.preventDefault();
+
+    this.setState({ loading: true, errorMessage: "" });
 
     try {
       const accounts = await web3.eth.getAccounts();
@@ -35,6 +39,8 @@ class CampaignNew extends Component {
       // err ^ has a message property
       this.setState({ errorMessage: err.message });
     }
+
+    this.setState({ loading: false });
   };
 
   render() {
@@ -55,7 +61,9 @@ class CampaignNew extends Component {
           </Form.Field>
 
           <Message error header="Oops!" content={this.state.errorMessage} />
-          <Button primary>Create!</Button>
+          <Button loading={this.state.loading} primary>
+            Create!
+          </Button>
         </Form>
       </Layout>
     );
