@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Form, Input } from "semantic-ui-react";
+import { Button, Form, Input, Message } from "semantic-ui-react";
 import Layout from "../../components/Layout";
 import factory from "../../ethereum/factory"; // we use lowercase factory b/c
 // this is an instance of a contract
@@ -13,7 +13,8 @@ class CampaignNew extends Component {
   // it back to the component. Next, the onChange is used to update the state
   // everytime the user types into the input.
   state = {
-    minimumContribution: ""
+    minimumContribution: "",
+    errorMessage: ""
   };
 
   // Event handler. Whenever we have a form submittal, the browser will automatically
@@ -22,18 +23,25 @@ class CampaignNew extends Component {
   onSubmit = async event => {
     event.preventDefault();
 
-    const accounts = await web3.eth.getAccounts();
-    await factory.methods.createCampaign(this.state.minimumContribution).send({
-      from: accounts[0]
-    });
+    try {
+      const accounts = await web3.eth.getAccounts();
+      await factory.methods
+        .createCampaign(this.state.minimumContribution)
+        .send({
+          from: accounts[0]
+        });
+    } catch (err) {
+      // We set up a new state property
+      // err ^ has a message property
+      this.setState({ errorMessage: err.message });
+    }
   };
 
   render() {
     return (
       <Layout>
         <h3>Create a Campaign</h3>
-
-        <Form onSubmit={this.onSubmit}>
+        <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
           <Form.Field>
             <label>Minimum Contribution</label>
             <Input
@@ -46,6 +54,7 @@ class CampaignNew extends Component {
             />
           </Form.Field>
 
+          <Message error header="Oops!" content={this.state.errorMessage} />
           <Button primary>Create!</Button>
         </Form>
       </Layout>
