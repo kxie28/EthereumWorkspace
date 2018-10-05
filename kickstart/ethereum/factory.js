@@ -10,7 +10,7 @@ import CampaignFactory from "./build/CampaignFactory.json";
 // we deployed earlier with npm deploy.js command
 const instance = new web3.eth.Contract(
   JSON.parse(CampaignFactory.interface),
-  "0x6882e07C7Db8c0d91FD532F57267ff190ECB55F3"
+  "0x91e6709aE97fDeb8c7f63cE9371D45bdd3C9B2bf"
 );
 
 export default instance;
