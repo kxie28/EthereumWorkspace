@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import factory from "../ethereum/factory";
+import { Card, Button } from "semantic-ui-react";
+import Layout from "../components/Layout";
 
 class CampaignIndex extends Component {
   // componentDidMount is 100% appropriate in React, but in next.js, there
@@ -21,6 +23,21 @@ class CampaignIndex extends Component {
     return { campaigns: campaigns };
   }
 
+  // iterate through the list of campaign addresses, and for every address, we'll
+  // create a different object. Each object will represent a different card.
+  renderCampaigns() {
+    const items = this.props.campaigns.map(address => {
+      return {
+        header: address,
+        description: <a>View Campaign</a>,
+        // fluid stretches each card to the side of the page (far left to far right)
+        fluid: true
+      };
+    });
+
+    return <Card.Group items={items} />;
+  }
+
   /*
   async componentDidMount() {
     const campaigns = await factory.methods.getDeployedCampaigns().call();
@@ -29,7 +46,24 @@ class CampaignIndex extends Component {
 
   // renders text onto the screen for jsx
   render() {
-    return <div>{this.props.campaigns[0]}</div>;
+    return (
+      // b/c of the Layout component, every page will have the layout component
+      // in the page, in this case, a header.
+      <Layout>
+        <div>
+          <h3>Open Campaigns</h3>
+          <Button
+            floated="right"
+            content="Create Campaign"
+            icon="add circle"
+            // primary is the same as primary={true}, primary adds a blue styling
+            // to the button
+            primary
+          />
+          {this.renderCampaigns()}
+        </div>
+      </Layout>
+    );
   }
 }
 

@@ -13,7 +13,6 @@ contract CampaignFactory {
     }
 }
 contract Campaign {
-
     // Struct is a brand new type into contract (like address, string, uit, etc)
     struct Request {
         string description;
