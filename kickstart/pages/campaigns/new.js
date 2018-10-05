@@ -4,6 +4,10 @@ import Layout from "../../components/Layout";
 import factory from "../../ethereum/factory"; // we use lowercase factory b/c
 // this is an instance of a contract
 import web3 from "../../ethereum/web3";
+// Link object is a React component that allows us to render anchor tags into our
+// React components and navigate around the application. Router object allows
+// us to programatically redirect people from one page to another page in our app
+import { Link, Router } from "../../routes";
 
 class CampaignNew extends Component {
   // We initialize state so we can keep track of the state of the minimumContribution
@@ -34,6 +38,9 @@ class CampaignNew extends Component {
         .send({
           from: accounts[0]
         });
+
+      // This will redirect our user to the index page after a successful transaction
+      Router.pushRoute("/");
     } catch (err) {
       // We set up a new state property
       // err ^ has a message property
