@@ -1,3 +1,5 @@
 node_modules
 ADDRESS
 .next
+node_modules/
+.next/
