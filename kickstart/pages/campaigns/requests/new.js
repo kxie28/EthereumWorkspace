@@ -9,7 +9,9 @@ class RequestNew extends Component {
   state = {
     value: "",
     description: "",
-    recipient: ""
+    recipient: "",
+    errorMessage: "",
+    loading: false
   };
 
   static async getInitialProps(props) {
@@ -23,9 +25,10 @@ class RequestNew extends Component {
     event.preventDefault();
 
     const campaign = Campaign(this.props.address);
-
     // destructure so instead of having to type this.state.description, etc..
     const { description, value, recipient } = this.state;
+
+    this.setState({ loading: true, errorMessage: "" });
 
     try {
       const accounts = await web3.eth.getAccounts();
@@ -34,14 +37,22 @@ class RequestNew extends Component {
         .send({
           from: accounts[0]
         });
-    } catch (err) {}
+      // reroute user back to the requests page
+      Router.pushRoute(`/campaigns/${this.props.address}/requests`);
+    } catch (err) {
+      this.setState({ errorMessage: err.message });
+    }
+    this.setState({ loading: false });
   };
 
   render() {
     return (
       <Layout>
+        <Link route={`/campaigns/${this.props.address}/requests`}>
+          <a>Back</a>
+        </Link>
         <h3>Create a Request</h3>
-        <Form onSubmit={this.onSubmit}>
+        <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
           <Form.Field>
             <label>Description</label>
             <Input
@@ -70,7 +81,10 @@ class RequestNew extends Component {
             />
           </Form.Field>
 
-          <Button primary>Create!</Button>
+          <Message error header="Oops!" content={this.state.errorMessage} />
+          <Button primary loading={this.state.loading}>
+            Create!
+          </Button>
         </Form>
       </Layout>
     );
