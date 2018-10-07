@@ -1,4 +1,4 @@
-[Main Ethereum smart contract](./kickstart)
+[Main Ethereum smart contract - kickstart](./kickstart)
 
 clone and run 
 ```npm run dev```
