@@ -1,4 +1,4 @@
-Main Ethereum smart contract in **kickstart** directory
+[Main Ethereum smart contract](./kickstart)
 
 clone and run 
 ```npm run dev```
