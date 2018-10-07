@@ -1,5 +1,7 @@
-Main Ethereum smart contract in kickstart directory
+Main Ethereum smart contract in **kickstart** directory
 
-clone and run "npm run dev" in kickstart
+clone and run 
+```npm run dev```
+in kickstart
 
-go to localhost:3000
+[Local Site](localhost:3000)
