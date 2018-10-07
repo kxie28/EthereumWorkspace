@@ -4,4 +4,4 @@ clone and run
 ```npm run dev```
 in kickstart
 
-[Local Site](localhost:3000)
+[Local Site](http://localhost:3000)
